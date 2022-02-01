@@ -40,22 +40,21 @@ if __name__ == '__main__':
     n_actions = 5
     maddpg_agents = MADDPG(actor_dims, critic_dims, n_agents, n_actions, 
                            fc1=128, fc2=64,  
-                           alpha=0.01, beta=0.01, scenario=scenario,
+                           alpha=0.0001, beta=0.0001, scenario=scenario,
                            chkpt_dir='tmp/maddpg/')
 
     memory = MultiAgentReplayBuffer(100000, critic_dims, actor_dims, 
                         n_actions, n_agents, batch_size=1024)
 
     # PRINT_INTERVAL = 500
-    N_GAMES = 50000
-    MAX_STEPS = 1900
+    N_GAMES = 10000
+    MAX_STEPS = 5000
     total_steps = 0
     score_history = []
-    evaluate = False
+    evaluate = True
     # best_score = 0
 
-    if evaluate:
-        maddpg_agents.load_checkpoint()
+    maddpg_agents.load_checkpoint()
 
     for i in range(N_GAMES):
         obs = env.reset()
@@ -73,6 +72,7 @@ if __name__ == '__main__':
             state_ = obs_list_to_state_vector(obs_)
 
             if episode_step >= MAX_STEPS:
+                print("chiryo")
                 done = [True]*n_agents
 
             memory.store_transition(obs, state, actions, reward, obs_, state_, done)

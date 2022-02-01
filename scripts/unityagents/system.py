@@ -1,12 +1,16 @@
 from mlagents_envs.environment import UnityEnvironment
 from mlagents_envs.base_env import DecisionSteps, TerminalSteps, ActionTuple,  ActionSpec, BehaviorSpec, DecisionStep
 import numpy as np
+from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 class dodgeball_agents:
     def __init__(self,file_name):
+        channel = EngineConfigurationChannel()
+        channel.set_configuration_parameters(time_scale=4)
+        self.side_channels = [channel]
         self.file_name = file_name
         self.worker_id = 5
         self.seed = 4
-        self.side_channels = []
+        # self.side_channels = []
         self.env=None
         self.nbr_agent=3
         self.n = self.nbr_agent * 2
@@ -90,7 +94,7 @@ class dodgeball_agents:
     def get_agent_decision_step(self,decision_steps, team_id, agent_index):
         assert team_id in [0, 1]
         assert agent_index in range(self.nbr_agent)
-        assert type(decision_steps) == DecisionSteps
+        # assert type(decision_steps) == DecisionSteps
         return decision_steps[self.agent_ids[team_id][agent_index]]
         
     
@@ -98,7 +102,7 @@ class dodgeball_agents:
     def get_agent_obs_with_n_stacks(self, decision_step, num_time_stacks=1):
         #TODO: ainitialize with a big enough result instead of repetitive concatenation
         assert num_time_stacks >= 1
-        assert type(decision_step) == DecisionStep
+        # assert type(decision_step) == DecisionStep
         obs = decision_step.obs
         # print(obs[0].shape) ## (150,)
         # print(obs[1].shape) ## (60,)
@@ -193,7 +197,8 @@ class dodgeball_agents:
         for element in numpy_list:
             action_tuple_continuous = element[:num_continuous]
             # print(element[num_continuous:])
-            action_tuple_discrete = np.random.binomial(1, p=element[num_continuous:])
+            # action_tuple_discrete = np.random.binomial(1, p=element[num_continuous:])
+            action_tuple_discrete = element[num_continuous:]##recently added##
             action_tuple_list.append(ActionTuple(np.expand_dims(action_tuple_continuous,0),np.expand_dims(action_tuple_discrete,0)))
         return action_tuple_list
 
@@ -218,10 +223,17 @@ class dodgeball_agents:
         self.decision_steps[0],self.terminal_steps[0] = self.env.get_steps(self.get_teamName(teamId = 0))
         self.decision_steps[1],self.terminal_steps[1] = self.env.get_steps(self.get_teamName(teamId = 1))
         
+        ##recently added to resolve err##
+        dones = self.get_all_agent_done()
+        if any(dones[0:3]):
+            self.decision_steps[0] = self.terminal_steps[0]
+        if any(dones[3:6]):
+            self.decision_steps[1] = self.terminal_steps[1]
+
         ##get next_states ,rewards and dones from updated decision and terminal steps##
         next_states  = self.get_all_agent_obs()
         rewards = self.get_all_agent_reward()
-        dones = self.get_all_agent_done()
+        # dones = self.get_all_agent_done()
         
         return next_states,rewards,dones
 
