@@ -14,7 +14,7 @@ class dodgeball_agents:
         self.nbr_agent=3
         self.n = self.nbr_agent * 2
         self.spec=None
-        self.agent_obs_size = 356 
+        self.agent_obs_size = 608
         self.num_envs = 1
         self.num_time_stacks = 1 
         self.decision_steps = []
@@ -111,7 +111,7 @@ class dodgeball_agents:
         result = np.concatenate((obs[2].reshape((-1,)),result))
         for i in range(3, len(obs)):
             result = np.concatenate((result, obs[i]))
-        return result ##(356,)
+        return result ##(608,)
     
 
     ##returns agent observation from team decision_steps
@@ -131,9 +131,11 @@ class dodgeball_agents:
     def reward(self,team_id,agent_index):
         if self.agent_ids[team_id][agent_index] in self.decision_steps[team_id].agent_id:
             reward = self.decision_steps[team_id].__getitem__(self.agent_ids[team_id][agent_index]).reward
+            grp_reward = self.decision_steps[team_id].__getitem__(self.agent_ids[team_id][agent_index]).group_reward
         if self.agent_ids[team_id][agent_index] in self.terminal_steps[team_id].agent_id:
             reward = self.terminal_steps[team_id].__getitem__(self.agent_ids[team_id][agent_index]).reward
-        return reward  
+            grp_reward = self.terminal_steps[team_id].__getitem__(self.agent_ids[team_id][agent_index]).group_reward
+        return reward + grp_reward
     
     ##returns done##
     def terminal(self,team_id,agent_index):

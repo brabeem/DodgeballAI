@@ -2,6 +2,10 @@ from system import dodgeball_agents
 import numpy as np
 from maddpg import MADDPG
 from buffer import MultiAgentReplayBuffer
+import csv
+
+f = open("rewards.txt",'w')
+writer = csv.writer(f)
 
 def obs_list_to_state_vector(observation):
     state = np.array([])
@@ -9,9 +13,10 @@ def obs_list_to_state_vector(observation):
         state = np.concatenate([state, obs])
     return state
 
+
 if __name__ == '__main__':
-    scenario = 'ctf'
-    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/RewardSingEnv/sectf.x86_64")
+    scenario = 'biggerNet'
+    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/singenv/sectf.x86_64")
     env.set_env()
     n_agents = env.n
     actor_dims = []
@@ -22,10 +27,10 @@ if __name__ == '__main__':
     n_actions = 5
     maddpg_agents = MADDPG(actor_dims, critic_dims, n_agents, n_actions, 
                            fc1=128, fc2=64,  
-                           alpha=0.0001, beta=0.0001, scenario=scenario,
+                           alpha=0.001, beta=0.001, scenario=scenario,
                            chkpt_dir='tmp/maddpg/')
 
-    memory = MultiAgentReplayBuffer(100000, critic_dims, actor_dims, 
+    memory = MultiAgentReplayBuffer(50000, critic_dims, actor_dims, 
                         n_actions, n_agents, batch_size=1024)
 
     N_GAMES = 10000
@@ -43,7 +48,7 @@ if __name__ == '__main__':
         while not any(done):
             actions = maddpg_agents.choose_action(obs)
             obs_, reward, done = env.step(actions)
-
+            writer.writerow(reward)
             state = obs_list_to_state_vector(obs)
             state_ = obs_list_to_state_vector(obs_)
 
