@@ -33,17 +33,6 @@ class MultiAgentReplayBuffer:
 
     def store_transition(self, raw_obs, state, action, reward, 
                                raw_obs_, state_, done):
-        # this introduces a bug: if we fill up the memory capacity and then
-        # zero out our actor memory, the critic will still have memories to access
-        # while the actor will have nothing but zeros to sample. Obviously
-        # not what we intend.
-        # In reality, there's no problem with just using the same index
-        # for both the actor and critic states. I'm not sure why I thought
-        # this was necessary in the first place. Sorry for the confusion!
-
-        #if self.mem_cntr % self.mem_size == 0 and self.mem_cntr > 0:
-        #    self.init_actor_memory()
-        
         index = self.mem_cntr % self.mem_size
 
         for agent_idx in range(self.n_agents):
