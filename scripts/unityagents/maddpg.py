@@ -31,7 +31,7 @@ class MADDPG:
         for agent_idx, agent in enumerate(self.agents):
             action = agent.choose_action(raw_obs[agent_idx])
             actions.append(action)
-        assert len(actions) == 6
+        assert len(actions) == 4
         return actions
 
     def learn(self, memory):

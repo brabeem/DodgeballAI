@@ -15,8 +15,8 @@ def obs_list_to_state_vector(observation):
 
 
 if __name__ == '__main__':
-    scenario = 'biggerNet'
-    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/singenv/sectf.x86_64")
+    scenario = 'simpenv'
+    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/envs/too-simple/small_map_touch_flag.x86_64")
     env.set_env()
     n_agents = env.n
     actor_dims = []
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     for i in range(N_GAMES):
         obs = env.reset()
-        score = np.array([0,0,0,0,0,0])
+        score = np.array([0,0,0,0])
         done = [False]*n_agents
         episode_step = 0
         while not any(done):

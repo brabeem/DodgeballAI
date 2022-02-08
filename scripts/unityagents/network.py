@@ -11,8 +11,8 @@ class CriticNetwork(nn.Module):
 
         self.chkpt_file = os.path.join(chkpt_dir, name)
 
-        self.fc1 = nn.Linear(input_dims+n_agents*n_actions, 2048)
-        self.fc2 = nn.Linear(2048, 512)
+        self.fc1 = nn.Linear(input_dims+n_agents*n_actions, 1024)
+        self.fc2 = nn.Linear(1024, 512)
         self.fc3 = nn.Linear(512, 128)
         self.fc4 = nn.Linear(128,32)
         self.q = nn.Linear(32,1)
@@ -44,8 +44,8 @@ class ActorNetwork(nn.Module):
 
         self.chkpt_file = os.path.join(chkpt_dir, name)
 
-        self.fc1 = nn.Linear(input_dims, 512)
-        self.fc2 = nn.Linear(512, 256)
+        self.fc1 = nn.Linear(input_dims, 256)
+        # self.fc2 = nn.Linear(256, 256)
         self.fc3 = nn.Linear(256, 64)
         self.fc4 = nn.Linear(64,5)
         self.optimizer = optim.Adam(self.parameters(), lr=alpha)
@@ -55,7 +55,7 @@ class ActorNetwork(nn.Module):
 
     def forward(self, state):
         x = F.relu(self.fc1(state))
-        x = F.relu(self.fc2(x))
+        # x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
         pi = 4 * T.tanh(self.fc4(x))
         return pi
