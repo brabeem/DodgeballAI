@@ -36,6 +36,7 @@ class MADDPG:
 
     def learn(self, memory):
         if not memory.ready():
+            # print("returned")
             return
 
         actor_states, states, actions, rewards, \
@@ -48,7 +49,7 @@ class MADDPG:
         rewards = T.tensor(rewards,dtype=T.float).to(device)
         states_ = T.tensor(states_, dtype=T.float).to(device)
         dones = T.tensor(dones).to(device)
-
+        # print("after done")
         all_agents_new_actions = []
         all_agents_new_mu_actions = []
         old_agents_actions = []
@@ -65,14 +66,14 @@ class MADDPG:
             pi = agent.actor.forward(mu_states)
             all_agents_new_mu_actions.append(pi)
             old_agents_actions.append(actions[agent_idx])
-
+        # print("After the first loop")
         new_actions = T.cat([acts for acts in all_agents_new_actions], dim=1)
         mu = T.cat([acts for acts in all_agents_new_mu_actions], dim=1)
         old_actions = T.cat([acts for acts in old_agents_actions],dim=1)
 
         for agent_idx, agent in enumerate(self.agents):
             agent.actor.optimizer.zero_grad()
-        
+        # print("Trying to enter the one with the loss")
         for agent_idx, agent in enumerate(self.agents):
             critic_value_ = agent.target_critic.forward(states_, new_actions).flatten()
             critic_value_[dones[:,0]] = 0.0
@@ -80,6 +81,7 @@ class MADDPG:
 
             target = rewards[:,agent_idx] + agent.gamma*critic_value_
             critic_loss = F.mse_loss(target, critic_value)
+            # print("critic_loss",critic_loss)
             agent.critic.optimizer.zero_grad()
             critic_loss.backward(retain_graph=True)
             agent.critic.optimizer.step()
@@ -91,3 +93,4 @@ class MADDPG:
         for agent_idx, agent in enumerate(self.agents):
             agent.actor.optimizer.step()
             agent.update_network_parameters()
+        # print("at the end")

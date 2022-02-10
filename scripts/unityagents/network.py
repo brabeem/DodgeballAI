@@ -57,7 +57,7 @@ class ActorNetwork(nn.Module):
         x = F.relu(self.fc1(state))
         # x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        pi = 4 * T.tanh(self.fc4(x))
+        pi =  4* T.tanh(self.fc4(x))
         return pi
 
     def save_checkpoint(self):

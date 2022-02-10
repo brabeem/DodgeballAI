@@ -5,7 +5,7 @@ from mlagents_envs.side_channel.engine_configuration_channel import EngineConfig
 class dodgeball_agents:
     def __init__(self,file_name):
         channel = EngineConfigurationChannel()
-        channel.set_configuration_parameters(time_scale=1)
+        channel.set_configuration_parameters(time_scale=20)
         self.side_channels = [channel]
         self.file_name = file_name
         self.worker_id = 5
