@@ -37,7 +37,7 @@ if __name__ == '__main__':
     MAX_STEPS = 5000
     total_steps = 0
     score_history = []
-    evaluate = False
+    evaluate = True
 
     
     maddpg_agents.load_checkpoint()
