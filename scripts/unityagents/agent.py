@@ -28,7 +28,7 @@ class Agent:
         state = T.tensor([observation], dtype=T.float).to(self.actor.device)
         actions = self.actor.forward(state)
         actions = T.squeeze(actions)
-        noise = T.rand(self.n_actions).to(self.actor.device)
+        noise = T.randn(self.n_actions).to(self.actor.device)
         actions = actions + noise
         dis_action = actions[3:]
         dis_action = T.clamp(dis_action,0,1)

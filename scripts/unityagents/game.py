@@ -4,8 +4,7 @@ from maddpg import MADDPG
 from buffer import MultiAgentReplayBuffer
 import csv
 
-f = open("rewards.txt",'w')
-writer = csv.writer(f)
+
 
 def obs_list_to_state_vector(observation):
     state = np.array([])
@@ -37,7 +36,7 @@ if __name__ == '__main__':
     MAX_STEPS = 5000
     total_steps = 0
     score_history = []
-    evaluate = True
+    evaluate = False
 
     
     maddpg_agents.load_checkpoint()
@@ -70,7 +69,6 @@ if __name__ == '__main__':
         score_history.append(score)
         latest_score_history = np.array(score_history[-5:])
         avg_score = np.mean(latest_score_history,axis=0,keepdims=False)
-        writer.writerow(avg_score)
 
         if not evaluate:
             if i%5 == 0:

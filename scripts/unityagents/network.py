@@ -27,7 +27,6 @@ class CriticNetwork(nn.Module):
         x = F.relu(self.fc3(x))
         x = F.relu(self.fc4(x))
         q = self.q(x)
-
         return q
 
     def save_checkpoint(self):
