@@ -3,10 +3,10 @@ from mlagents_envs.base_env import DecisionSteps, TerminalSteps, ActionTuple,  A
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 import numpy as np
 class dodgeball_agents:
-    def __init__(self,file_name):
+    def __init__(self,file_name, time_scale):
         # Create the side channel
         self.engine_config_channel = EngineConfigurationChannel()
-        self.engine_config_channel.set_configuration_parameters(time_scale=1)
+        self.engine_config_channel.set_configuration_parameters(time_scale=time_scale)
         self.file_name = file_name
         self.worker_id = 2
         self.seed = 4

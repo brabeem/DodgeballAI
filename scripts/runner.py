@@ -78,14 +78,14 @@ class Runner:
                 #     self.plot_graph( self.avg_returns_test['team_purple'],list( self.avg_returns_test.keys())[1],method='test')
                 if(any(done)==True):
                     break
-            self.noise = max(0.01, self.noise - 0.0002)
+            self.noise = max(0.01, self.noise - 0.004)
             self.epsilon = max(0.01, self.epsilon - 0.0002)
             #returns['team_blue'].append(rewards['team_blue'])
             #returns['team_purple'].append(rewards['team_purple'])
             self.scores_deque['team_blue'].append(rewards['team_blue'])
             self.scores_deque['team_purple'].append(rewards['team_purple'])
-            print('team blue avg Returns is', np.mean(self.scores_deque['team_blue']))
-            print('team purple avg Returns is',np.mean(self.scores_deque['team_purple']))  
+            # print('team blue avg Returns is', np.mean(self.scores_deque['team_blue']))
+            # print('team purple avg Returns is',np.mean(self.scores_deque['team_purple']))  
             self.avg_returns_train['team_blue'].append(np.mean(self.scores_deque['team_blue']))
             self.avg_returns_train['team_purple'].append(np.mean(self.scores_deque['team_purple']))
             self.plot_graph(self.avg_returns_train,method='train')
