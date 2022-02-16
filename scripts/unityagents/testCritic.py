@@ -13,19 +13,22 @@ critic_nets = []
 
 
 for _ in critic_filenames:
-    critic_nets.append(net.CriticNetwork(0.001,2016,22,22,4,5,"kera","fuck_you"))
+    critic_nets.append(net.CriticNetwork(0.001,2016,22,22,4,5,"oho","ok"))
 
 for i,critic_net in enumerate(critic_nets):
-    critic_net.load_state_dict(T.load("tmp/maddpg/simpenv/" + critic_filenames[i]))
+    critic_net.load_state_dict(T.load("tmp/maddpg/smallNet/" + critic_filenames[i]))
 
 actor_nets = []
 
 for _ in actor_filenames:
-    actor_nets.append(net.ActorNetwork(0.01,504,45,45,5,"kera","fuck_you"))
+    actor_nets.append(net.ActorNetwork(0.01,504,45,45,5,"oho","ok"))
 
 for i,actor_net in enumerate(actor_nets):
-    actor_net.load_state_dict(T.load("tmp/maddpg/simpenv/" + actor_filenames[i]))
+    actor_net.load_state_dict(T.load("tmp/maddpg/smallNet/" + actor_filenames[i]))
 
+# for actor_net in actor_nets:
+#     for name,param in actor_net.named_parameters():
+#         writer.writerow(param)
 def obs_list_to_state_vector(observation):
     state = np.array([])
     for obs in observation:
@@ -45,10 +48,15 @@ for i in range(10):
         torch_state = T.tensor(not_torch_state, dtype=T.float)
         torch_state = T.unsqueeze(torch_state,dim=0)
         for i,o in enumerate(obs):
-            o = T.tensor(o, dtype=T.float)
-            o = actor_nets[i].forward(o)
-            o = T.unsqueeze(o,dim=0)
+            o = T.tensor([o], dtype=T.float)
+            # print("obs:",o.shape)
+            # o = T.unsqueeze(o,dim=0)
+            o = actor_nets[i].forward(o)            
+            # print("actions:",o.shape)
+            # o = T.unsqueeze(o,dim=0)
+            # print("actions_tallo:",o.shape)
             actions.append(o)
+        # writer.writerow(actions)
         actions_not_list = T.cat([acts for acts in actions],dim=1)
         for j,_ in enumerate(actions):
             q_each = critic_nets[j].forward(torch_state,actions_not_list)

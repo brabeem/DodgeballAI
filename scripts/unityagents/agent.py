@@ -26,41 +26,23 @@ class Agent:
 
     def choose_action(self, observation):
         state = T.tensor([observation], dtype=T.float).to(self.actor.device)
+        self.actor.eval()
         actions = self.actor.forward(state)
+        self.actor.train()
         actions = T.squeeze(actions)
-        noise = T.randn(self.n_actions).to(self.actor.device)
-        actions = actions + noise
-        dis_action = actions[3:]
-        dis_action = T.clamp(dis_action,0,1)
-        dis_action = T.bernoulli(dis_action)
-        actions[3:] = dis_action
+        noise = 0.4*T.randn(3).to(self.actor.device)
+        actions[:3] = actions[:3] + noise
         return actions.detach().cpu().numpy()
 
     def update_network_parameters(self, tau=None):
         if tau is None:
             tau = self.tau
 
-        target_actor_params = self.target_actor.named_parameters()
-        actor_params = self.actor.named_parameters()
+        for target_param, param in zip(self.target_actor.parameters(), self.actor.parameters()):
+            target_param.data.copy_((1 - tau) * target_param.data + tau * param.data)
 
-        target_actor_state_dict = dict(target_actor_params)
-        actor_state_dict = dict(actor_params)
-        for name in actor_state_dict:
-            actor_state_dict[name] = tau*actor_state_dict[name].clone() + \
-                    (1-tau)*target_actor_state_dict[name].clone()
-
-        self.target_actor.load_state_dict(actor_state_dict)
-
-        target_critic_params = self.target_critic.named_parameters()
-        critic_params = self.critic.named_parameters()
-
-        target_critic_state_dict = dict(target_critic_params)
-        critic_state_dict = dict(critic_params)
-        for name in critic_state_dict:
-            critic_state_dict[name] = tau*critic_state_dict[name].clone() + \
-                    (1-tau)*target_critic_state_dict[name].clone()
-
-        self.target_critic.load_state_dict(critic_state_dict)
+        for target_param, param in zip(self.target_critic.parameters(), self.critic.parameters()):
+            target_param.data.copy_((1 - tau) * target_param.data + tau * param.data)
 
     def save_models(self):
         self.actor.save_checkpoint()

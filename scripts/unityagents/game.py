@@ -5,6 +5,9 @@ from buffer import MultiAgentReplayBuffer
 import csv
 
 
+f = open("rewards.txt",'w')
+writer = csv.writer(f)
+
 
 def obs_list_to_state_vector(observation):
     state = np.array([])
@@ -14,7 +17,7 @@ def obs_list_to_state_vector(observation):
 
 
 if __name__ == '__main__':
-    scenario = 'simpenv'
+    scenario = 'smallNet'
     env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/envs/too-simple/small_map_touch_flag.x86_64")
     env.set_env()
     n_agents = env.n
@@ -37,8 +40,6 @@ if __name__ == '__main__':
     total_steps = 0
     score_history = []
     evaluate = False
-
-    
     maddpg_agents.load_checkpoint()
     
     for i in range(N_GAMES):
@@ -48,6 +49,8 @@ if __name__ == '__main__':
         episode_step = 0
         while not any(done):
             actions = maddpg_agents.choose_action(obs)
+            
+            # writer.writerow(actions)##
             obs_, reward, done = env.step(actions)
             state = obs_list_to_state_vector(obs)
             state_ = obs_list_to_state_vector(obs_)

@@ -16,8 +16,11 @@ class MADDPG:
             self.agents.append(Agent(actor_dims[agent_idx], critic_dims,  
                             n_actions, n_agents, agent_idx, alpha=alpha, beta=beta,
                             chkpt_dir=chkpt_dir))
-        self.f = open("rewards.txt",'w')
-        self.writer = csv.writer(self.f)
+        self.f_critic = open("criticGrad",'w')
+        self.f_actor = open("actorGrad","w")
+        self.critic_writer = csv.writer(self.f_critic)
+        self.actor_writer = csv.writer(self.f_actor)
+
 
     def save_checkpoint(self):
         print('... saving checkpoint ...')
@@ -59,13 +62,13 @@ class MADDPG:
             new_states = T.tensor(actor_new_states[agent_idx], 
                                  dtype=T.float).to(device)
 
-            new_pi = agent.target_actor.forward(new_states)
+            new_pi = agent.target_actor.forward(new_states).detach()
 
             all_agents_new_actions.append(new_pi)
             mu_states = T.tensor(actor_states[agent_idx], 
                                  dtype=T.float).to(device)
             pi = agent.actor.forward(mu_states)
-
+            
             all_agents_new_mu_actions.append(pi)
             old_agents_actions.append(actions[agent_idx])
         new_actions = T.cat([acts for acts in all_agents_new_actions], dim=1)
@@ -74,9 +77,10 @@ class MADDPG:
 
         for agent_idx, agent in enumerate(self.agents):
             agent.actor.optimizer.zero_grad()
+
         for agent_idx, agent in enumerate(self.agents):
-            critic_value_ = agent.target_critic.forward(states_, new_actions).flatten()
-            critic_value_[dones[:,0]] = 0.0
+            critic_value_ = agent.target_critic.forward(states_, new_actions).flatten().detach()
+            critic_value_[dones[:,agent_idx]] = 0.0
             critic_value = agent.critic.forward(states, old_actions).flatten()
 
             target = rewards[:,agent_idx] + agent.gamma*critic_value_
@@ -84,12 +88,16 @@ class MADDPG:
             agent.critic.optimizer.zero_grad()
             critic_loss.backward(retain_graph=True)
             agent.critic.optimizer.step()
+            
 
-            actor_loss = agent.critic.forward(states, mu).flatten()
-            actor_loss = -T.mean(actor_loss)
-            actor_loss.backward(retain_graph=True)
-            self.writer.writerow(agent.critic.fc3.weight.grad)##print gradient##
 
         for agent_idx, agent in enumerate(self.agents):
+            # self.critic_writer.writerow(agent.critic.fc3.weight.grad)##print critic fc1 gradient##
+            actor_loss = agent.critic.forward(states, mu).flatten()
+            actor_loss = -T.mean(actor_loss)
+            agent.critic.optimizer.zero_grad()
+            agent.actor.optimizer.zero_grad()
+            actor_loss.backward(retain_graph=True)
+            # self.actor_writer.writerow(agent.actor.fc1.weight.grad)##print actor fc1 gradient##
             agent.actor.optimizer.step()
             agent.update_network_parameters()
