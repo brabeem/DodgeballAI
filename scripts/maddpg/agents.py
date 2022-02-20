@@ -1,22 +1,55 @@
+
 from mlagents_envs.environment import UnityEnvironment
 from mlagents_envs.base_env import DecisionSteps, TerminalSteps, ActionTuple,  ActionSpec, BehaviorSpec, DecisionStep
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 import numpy as np
+
+from mlagents_envs.side_channel.side_channel import (
+    SideChannel,
+    IncomingMessage,
+    OutgoingMessage,
+)
+import numpy as np
+import uuid
+
+
+# Create the StringLogChannel class
+class StringLogChannel(SideChannel):
+
+    def __init__(self) -> None:
+        super().__init__(uuid.UUID("a1d8f7b7-cec8-50f9-b78b-d3e165a78520"))
+
+    def on_message_received(self, msg: IncomingMessage) -> None:
+        """
+        Note: We must implement this method of the SideChannel interface to
+        receive messages from Unity
+        """
+        # We simply read a string from the message and print it.
+        pass
+
+    def send_string(self, data: str) -> None:
+        # Add the string to an OutgoingMessage
+        pass
+    
+string_log = StringLogChannel()
+
+
 class dodgeball_agents:
-    def __init__(self,file_name, time_scale):
+    def __init__(self,file_name, time_scale, no_graphics):
         # Create the side channel
         self.engine_config_channel = EngineConfigurationChannel()
         self.engine_config_channel.set_configuration_parameters(time_scale=time_scale)
         self.file_name = file_name
         self.worker_id = 2
         self.seed = 4
-        self.side_channels = [self.engine_config_channel]
+        self.side_channels = [string_log, self.engine_config_channel]
         self.env=None
         self.nbr_agent=2
         self.spec=None
         #self.agent_obs_size = 512 #356##without stacking##
         self.agent_obs_size = 504
         self.num_envs = 1
+        self.no_graphics = no_graphics
         #self.num_time_stacks = 3 #as defined in the build
         self.num_time_stacks = 1
         self.decision_steps = {0:DecisionSteps, 1:DecisionSteps}
@@ -26,7 +59,7 @@ class dodgeball_agents:
         
     ##return the environment from the file
     def set_env(self):
-        self.env=UnityEnvironment(file_name=self.file_name,worker_id=self.worker_id, seed=self.worker_id, side_channels=self.side_channels)
+        self.env=UnityEnvironment(file_name=self.file_name,worker_id=self.worker_id, seed=self.worker_id, side_channels=self.side_channels, no_graphics = self.no_graphics)
         self.env.reset()
         self.spec=self.team_spec() 
         self.decision_steps[0],self.terminal_steps[0] = self.env.get_steps(self.get_teamName(teamId = 0))
