@@ -31,12 +31,12 @@ def get_args():
     # Evaluate
     parser.add_argument("--evaluate-episodes", type=int, default=1, help="number of episodes for evaluating")
     parser.add_argument("--evaluate-episode-len", type=int, default=2000, help="length of episodes for evaluating")
-    parser.add_argument("--evaluate", type=bool, default=True, help="whether to evaluate the model")
+    parser.add_argument("--evaluate", type=bool, default=False, help="whether to evaluate the model")
     parser.add_argument("--evaluate-rate", type=int, default=1000, help="how often to evaluate model")
 
     #self-play
     parser.add_argument("--size_netbank", type=int, default=50, help="number of past actor networks to save")
-    parser.add_argument("--swap_team", type=int, default=80000, help="after this many steps, change the policy of opponent team")
+    parser.add_argument("--swap_team", type=int, default=15000, help="after this many steps, change the policy of opponent team")
     parser.add_argument("--save_team", type=int, default=20000, help="after this many steps, save the current policy to network bank")
     parser.add_argument("--p_select_latest", type=float, default=0.5, help="probability with which to select the last opponent, increasing this value means the learning team plays against the same opponent for longer")
     args = parser.parse_args()

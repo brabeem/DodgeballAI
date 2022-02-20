@@ -58,3 +58,8 @@ class Agent(nn.Module):
     def learn(self, experiences, other_agents):
         self.policy.train(experiences, other_agents)
 
+    def get_actor_params(self):
+        return self.policy.get_actor_params()
+
+    def load_actor_params(self, state_dict):
+        self.policy.actor_network.load_state_dict(state_dict)

@@ -10,7 +10,7 @@ class Buffer:
         self.current_size = 0
         # create the buffer to store info
         self.buffer = dict()
-        for i in range(self.args.n_agents):
+        for i in range(self.args.n_learning_agents):
             self.buffer['o_%d' % i] = np.empty([self.size, self.args.obs_shape[i]])
             self.buffer['a_%d' % i] = np.empty([self.size, self.args.action_shape[i]])
             self.buffer['r_%d' % i] = np.empty([self.size])
@@ -23,7 +23,7 @@ class Buffer:
     def store_episode(self, o, a, r, o_next,done):
         idxs = self._get_storage_idx(inc=1)  
         #idxs = self.current_size%self.size
-        for i in range(self.args.n_agents):
+        for i in range(self.args.n_learning_agents):
             with self.lock:
                 self.buffer['o_%d' % i][idxs] = o[i]
                 self.buffer['a_%d' % i][idxs] = a[i]

@@ -268,7 +268,7 @@ class Runner:
                         result = [0.5,0.5] 
                     self.update_elo_rating(result)
                     break
-            self.noise = max(0.01, self.noise - 0.004)
+            self.noise = max(0.05, self.noise - 0.001)
             self.epsilon = max(0.01, self.epsilon - 0.0002)
             #returns['team_blue'].append(rewards['team_blue'])
             #returns['team_purple'].append(rewards['team_purple'])
@@ -288,7 +288,7 @@ class Runner:
             # self.avg_returns_train['sum_reward'].append(blue_avg_reward+purple_avg_reward)
             # 
             # self.plot_graph(self.avg_returns_train,method='train')
-            if i % 5 == 0:
+            if i % 15 == 0:
                 # f_blue.flush()
                 # f_purple.flush()
                 # f_elo.flush()
@@ -348,7 +348,7 @@ class Runner:
 
 
 
-        n=self.args.n_agents
+        n=self.args.n_learning_agents
         time_step=0
         for i in range(self.episode_limit+1):
             self.avg_returns_train={'team_purple':[],'team_blue':[], 'sum_reward':[]}

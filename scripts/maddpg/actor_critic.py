@@ -76,10 +76,10 @@ class Critic(nn.Module):
         """
         super().__init__()
         self.max_action = args.high_action
-        self.bn1 = nn.BatchNorm1d(sum(args.obs_shape))
-        self.fcs1 = nn.Linear(sum(args.obs_shape), fcs1_units)
+        self.bn1 = nn.BatchNorm1d(sum(args.obs_shape[:2]))
+        self.fcs1 = nn.Linear(sum(args.obs_shape[:2]), fcs1_units)
         self.bn2 = nn.BatchNorm1d(fcs1_units)
-        self.fc2 = nn.Linear(fcs1_units + sum(args.action_shape), fc2_units)
+        self.fc2 = nn.Linear(fcs1_units + sum(args.action_shape[:2]), fc2_units)
         self.bn3 = nn.BatchNorm1d(fc2_units)
         self.fc3 = nn.Linear(fc2_units, 1)
         self.reset_parameters()
