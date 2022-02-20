@@ -14,15 +14,15 @@ def get_args():
     parser.add_argument("--time-steps", type=int, default=2000, help="number of time steps")
     parser.add_argument("--time_scale", type=int, default=50, help="time_scale to use in *train* mode")
     # Core training parameters
-    parser.add_argument("--lr-actor", type=float, default=0.01, help="learning rate of actor")
-    parser.add_argument("--lr-critic", type=float, default=0.01, help="learning rate of critic")
+    parser.add_argument("--lr-actor", type=float, default=1e-4, help="learning rate of actor")
+    parser.add_argument("--lr-critic", type=float, default=1e-3, help="learning rate of critic")
     parser.add_argument("--epsilon", type=float, default=0.1, help="epsilon greedy")
     parser.add_argument("--noise_rate", type=float, default=1, help="noise rate for sampling from a standard normal distribution ")
-    parser.add_argument("--gamma", type=float, default=0.95, help="discount factor")
+    parser.add_argument("--gamma", type=float, default=0.99, help="discount factor")
     parser.add_argument("--tau", type=float, default=0.01, help="parameter for updating the target network")
     parser.add_argument("--buffer-size", type=int, default=int(1e5), help="number of transitions can be stored in buffer")
     parser.add_argument("--batch-size", type=int, default=1024, help="number of episodes to optimize at the same time")
-    parser.add_argument("--learn_rate", type=int, default=100, help="number of episodes to optimize at the same time")
+    parser.add_argument("--learn_rate", type=int, default=59, help="number of episodes to optimize at the same time")
     # Checkpointing
     parser.add_argument("--save-dir", type=str, default="./model", help="directory in which training state and model should be saved")
     parser.add_argument("--save-rate", type=int, default=10, help="save model once every time this many episodes are completed")
@@ -36,8 +36,8 @@ def get_args():
 
     #self-play
     parser.add_argument("--size_netbank", type=int, default=50, help="number of past actor networks to save")
-    parser.add_argument("--swap_team", type=int, default=150000, help="after this many steps, change the policy of opponent team")
-    parser.add_argument("--save_team", type=int, default=25000, help="after this many steps, save the current policy to network bank")
+    parser.add_argument("--swap_team", type=int, default=80000, help="after this many steps, change the policy of opponent team")
+    parser.add_argument("--save_team", type=int, default=20000, help="after this many steps, save the current policy to network bank")
     parser.add_argument("--p_select_latest", type=float, default=0.5, help="probability with which to select the last opponent, increasing this value means the learning team plays against the same opponent for longer")
     args = parser.parse_args()
 
