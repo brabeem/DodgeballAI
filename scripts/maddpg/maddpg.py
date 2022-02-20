@@ -113,7 +113,7 @@ class MADDPG:
             self.save_model(self.train_step)
         self.train_step += 1
 
-    def save_model(self, train_step):
+    def save_model(self, train_step=None):
         #num = str(train_step // self.args.save_rate)
         model_path = os.path.join(self.args.save_dir, self.args.scenario_name)
         if not os.path.exists(model_path):
