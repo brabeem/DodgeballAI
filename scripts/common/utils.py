@@ -122,10 +122,11 @@ class OUNoise:
         return self.state
 
 
-def make_env(args,name, time_scale):
-    env = dodgeball_agents(name, time_scale)
+def make_env(args,name, time_scale, no_graphics):
+    env = dodgeball_agents(name, time_scale, no_graphics)
     env.set_env()
-    args.n_agents = env.nbr_agent
+    args.n_agents = env.nbr_agent*2
+    args.n_learning_agents = env.nbr_agent
     args.obs_shape = [env.agent_obs_size for i in range(args.n_agents)] 
     args.action_shape =[env.spec.action_spec.discrete_size + env.spec.action_spec.continuous_size for i in range(args.n_agents)] 
     args.high_action = 1

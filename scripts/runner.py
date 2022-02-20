@@ -166,7 +166,6 @@ writer = csv.writer(f)
 class Runner:
     def __init__(self, args, env):
         self.args = args
-        self.args.n_learning_agents = 2
         self.noise = args.noise_rate
         self.epsilon = args.epsilon
         self.episode_limit = args.max_episode_len
