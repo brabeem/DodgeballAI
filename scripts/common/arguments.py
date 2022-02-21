@@ -36,7 +36,7 @@ def get_args():
 
     #self-play
     parser.add_argument("--size_netbank", type=int, default=50, help="number of past actor networks to save")
-    parser.add_argument("--swap_team", type=int, default=75000, help="after this many steps, change the policy of opponent team")
+    parser.add_argument("--swap_team", type=int, default=100000, help="after this many steps, change the policy of opponent team")
     parser.add_argument("--save_team", type=int, default=20000, help="after this many steps, save the current policy to network bank")
     parser.add_argument("--p_select_latest", type=float, default=0.5, help="probability with which to select the last opponent, increasing this value means the learning team plays against the same opponent for longer")
     args = parser.parse_args()
