@@ -268,7 +268,7 @@ class Runner:
                         result = [0.5,0.5] 
                     self.update_elo_rating(result)
                     break
-            self.noise = max(0.05, self.noise - 0.001)
+            self.noise = max(0.1, self.noise - 0.00025)
             self.epsilon = max(0.01, self.epsilon - 0.0002)
             #returns['team_blue'].append(rewards['team_blue'])
             #returns['team_purple'].append(rewards['team_purple'])
