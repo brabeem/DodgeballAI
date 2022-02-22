@@ -18,7 +18,7 @@ def obs_list_to_state_vector(observation):
 
 if __name__ == '__main__':
     scenario = 'smallNet'
-    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/envs/too-simple/small_map_touch_flag.x86_64")
+    env = dodgeball_agents("/home/brabeem/Documents/deepLearning/builds/too simple 1 stack/small_map_touch_zone.x86_64")
     env.set_env()
     n_agents = env.n
     actor_dims = []
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     n_actions = 5
     maddpg_agents = MADDPG(actor_dims, critic_dims, n_agents, n_actions, 
                            fc1=128, fc2=64,  
-                           alpha=0.01, beta=0.001, scenario=scenario,
+                           alpha=0.001, beta=0.001, scenario=scenario,
                            chkpt_dir='tmp/maddpg/')
 
     memory = MultiAgentReplayBuffer(50000, critic_dims, actor_dims, 
@@ -39,8 +39,9 @@ if __name__ == '__main__':
     MAX_STEPS = 5000
     total_steps = 0
     score_history = []
-    evaluate = False
-    maddpg_agents.load_checkpoint()
+    evaluate = True
+    if evaluate:
+        maddpg_agents.load_checkpoint()
     
     for i in range(N_GAMES):
         obs = env.reset()

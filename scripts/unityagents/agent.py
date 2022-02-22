@@ -30,8 +30,8 @@ class Agent:
         actions = self.actor.forward(state)
         self.actor.train()
         actions = T.squeeze(actions)
-        noise = 0.4*T.randn(3).to(self.actor.device)
-        actions[:3] = actions[:3] + noise
+        # noise =  T.randn(3).to(self.actor.device)
+        # actions[:3] = actions[:3] + noise
         return actions.detach().cpu().numpy()
 
     def update_network_parameters(self, tau=None):
