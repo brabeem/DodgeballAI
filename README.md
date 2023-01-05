@@ -7,4 +7,21 @@ Dodgeball 3D game:
   - The game is a capture the flag game where an agent runs to capture the flag of the opponent and 
     brings the flag of the enemy to its teritory while protecting his own flag.
 MADDPG:
-      -[a relative link]https://paperswithcode.com/method/maddpg
+  -[maddpg]https://paperswithcode.com/method/maddpg
+Curiculum Learning:
+  -A ciriculum is created for an agent to learn i.e they are trained in simple 
+   environments and as they go on learning the complexity of the environment is increased.
+  -[Curiculum Learning]https://arxiv.org/abs/2101.10382
+Self Learning:
+  -The agents competes in symetric game with the its older version.
+  -[self play]https://en.wikipedia.org/wiki/Self-play_(reinforcement_learning_technique)
+
+Model:
+
+
+
+
+
+What achieved?
+  -We were successful to achieve a very competitive capture the flag player but we couldnot 
+   achieve considerable collaboration between players.
