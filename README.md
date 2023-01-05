@@ -17,9 +17,12 @@ Self Learning:
   -[self play]https://en.wikipedia.org/wiki/Self-play_(reinforcement_learning_technique)
 
 Model:
+1)actor network used:
 
+![Actor](https://github.com/brabeem/DodgeballAI/blob/jhanda_uthauxa/actor.png)
 
-
+2)Critic network used:
+![Critic](https://github.com/brabeem/DodgeballAI/blob/jhanda_uthauxa/critic.png)
 
 
 What achieved?
